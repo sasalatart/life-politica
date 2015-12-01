@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="LifePolitica" default="run" >
+
+    <path id="classpath"> 
+        <fileset dir="lib" includes="**/*.jar"/>
+    </path> 
+
+    <target name="clean">
+        <delete dir="staging"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="staging"/>
+        <javac includeantruntime="false" srcdir="src" destdir="staging" classpathref="classpath"/>
+    </target>
+
+    <target name="jar" depends="clean, compile">
+        <mkdir dir="staging/jar"/>
+        <jar destfile="staging/jar/lifepolitica.jar" basedir="staging" filesetmanifest="mergewithoutmain">
+            <fileset dir="lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="Backend.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar"> 
+        <java classname="Backend.Main" fork="true">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="staging/jar/lifepolitica.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
